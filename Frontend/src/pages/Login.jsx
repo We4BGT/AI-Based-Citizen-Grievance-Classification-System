@@ -389,73 +389,89 @@ const RegisterView = ({
             }
           />
         </div>
+
         <div className="janseva-field">
-          <label>Phone number</label>
+          <label>Email Address</label>
           <input
-            type="tel"
-            placeholder="+91XXXXXXXXXX"
+            type="email"
+            placeholder="xyz@example.com"
             onChange={(e) =>
               setRegisterData({
                 ...registerData,
-                phone: e.target.value,
+                email: e.target.value,
                 role: activeRole,
               })
             }
           />
         </div>
-      </div>
 
-      <div className="janseva-field">
-        <label>Email Address</label>
-        <input
-          type="email"
-          placeholder="xyz@example.com"
-          onChange={(e) =>
-            setRegisterData({
-              ...registerData,
-              email: e.target.value,
-              role: activeRole,
-            })
-          }
-        />
-      </div>
-
-      <div className="janseva-field city-field">
-        <label>📍 City</label>
-        <div className="janseva-input-wrap">
-          <span className="janseva-loc-icon">🏘️</span>
-          <input type="text" placeholder="e.g. Indore, Bhopal, Sehore..." />
+        <div className="janseva-field city-field">
+          <label>📍 City</label>
+          <div className="janseva-input-wrap">
+            <span className="janseva-loc-icon">🏘️</span>
+            <input 
+              type="text"
+              placeholder="e.g. Indore, Bhopal, Sehore..."
+              onChange={(e) =>
+                setRegisterData({
+                  ...registerData,
+                  city: e.target.value,
+                  role: activeRole,
+                })
+              }
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="janseva-form-row">
-        <div className="janseva-field">
-          <label>Password</label>
-          <input type="password" placeholder="••••••••" />
+        <div className="janseva-form-row">
+          <div className="janseva-field">
+            <label>Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••" 
+              onChange={(e) =>
+                setRegisterData({
+                  ...registerData,
+                  password: e.target.value,
+                  role: activeRole,
+                })
+              }
+            />
+          </div>
+          <div className="janseva-field">
+            <label>Confirm Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••" 
+              onChange={(e) =>
+                setRegisterData({
+                  ...registerData,
+                  confirmPassword: e.target.value,
+                  role: activeRole,
+                })
+              }
+            />
+          </div>
         </div>
-        <div className="janseva-field">
-          <label>Confirm Password</label>
-          <input type="password" placeholder="••••••••" />
-        </div>
-      </div>
 
-      <button
-        className="janseva-submit-btn"
-        onClick={handleRegister}
-      >
-        Create Account →
-      </button>
+        <button
+          className="janseva-submit-btn"
+          onClick={handleRegister}
+        >
+          Create Account →
+        </button>
 
-      <div className="janseva-or-divider">or</div>
+        <div className="janseva-or-divider">or</div>
 
-      <button className="janseva-google-btn">
-        <GoogleIcon />
-        Continue with Google
-      </button>
+        <button className="janseva-google-btn">
+          <GoogleIcon />
+          Continue with Google
+        </button>
 
-      <div className="janseva-footer-link">
+        <div className="janseva-footer-link">
         Already registered?{" "}
         <a onClick={() => switchTab("signin")}>Sign in</a>
+        </div>
       </div>
     </div>
   </div>
@@ -465,16 +481,14 @@ const RegisterView = ({
    ROOT COMPONENT
 ───────────────────────────────────────── */
 export default function JanSeva() {
-  const [activeTab,  setActiveTab]  = useState("signin");   // 'signin' | 'register'
-  const [signinRole, setSigninRole] = useState("citizen");  // independent role state per view
-  const [regRole,    setRegRole]    = useState("citizen");
-  const [registerData, setRegisterData] = useState({
+ const [registerData, setRegisterData] = useState({
     name: "",
     email: "",
+    city: "",
     password: "",
+    confirmPassword: "",
     role: "citizen",
-  });
-
+ });
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -483,15 +497,19 @@ export default function JanSeva() {
 
   const switchTab = (tab) => setActiveTab(tab);
   const handleRegister = async () => {
-    try {
-      const data = await registerUser(registerData);
+     if (registerData.password !== registerData.confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
+      try {
+        const data = await registerUser(registerData);
 
-      alert(data.message);
+        alert(data.message);
 
-    } catch (error) {
+      } catch (error) {
         alert(error.response?.data?.message || "Registration Failed");
       }
-  };
+    };
   const handleLogin = async () => {
   try {
 
