@@ -47,7 +47,6 @@ User → Submit Complaint → Backend API → AI Model → Category Detection �
 ### 🎨 Frontend
 
 * React.js
-* Tailwind CSS
 
 ### ⚙️ Backend
 
