@@ -336,7 +336,12 @@ const SignInView = ({
 
       <div className="janseva-field">
         <label>Password</label>
-        <input type="password" placeholder="••••••••" />
+        <input
+          type="password"
+          placeholder="••••••••"
+          value={loginData.password}
+          onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+        />
       </div>
 
       <button
@@ -374,7 +379,7 @@ const RegisterView = ({
     <RoleToggle activeRole={activeRole} setActiveRole={setActiveRole} />
 
     <div className="janseva-form">
-      <div className="janseva-form-row">
+      <div className="janseva-form-column">
         <div className="janseva-field">
           <label>Full Name</label>
           <input
@@ -423,12 +428,13 @@ const RegisterView = ({
           </div>
         </div>
 
-        <div className="janseva-form-row">
+        <div className="janseva-form-column">
           <div className="janseva-field">
             <label>Password</label>
             <input 
               type="password" 
               placeholder="••••••••" 
+              value={registerData.password}
               onChange={(e) =>
                 setRegisterData({
                   ...registerData,
@@ -447,7 +453,7 @@ const RegisterView = ({
                 setRegisterData({
                   ...registerData,
                   confirmPassword: e.target.value,
-                  role: activeRole,
+                role: activeRole,
                 })
               }
             />
@@ -481,7 +487,12 @@ const RegisterView = ({
    ROOT COMPONENT
 ───────────────────────────────────────── */
 export default function JanSeva() {
- const [registerData, setRegisterData] = useState({
+
+  const [activeRole, setActiveRole] = useState("citizen");
+
+  const [activeTab, setActiveTab] = useState("signin");
+
+  const [registerData, setRegisterData] = useState({
     name: "",
     email: "",
     city: "",
@@ -591,8 +602,8 @@ export default function JanSeva() {
             {/* Conditional view */}
             {activeTab === "signin" ? (
               <SignInView
-                activeRole={signinRole}
-                setActiveRole={setSigninRole}
+                activeRole={activeRole}
+                setActiveRole={setActiveRole}
                 switchTab={switchTab}
                 loginData={loginData}
                 setLoginData={setLoginData}
@@ -600,8 +611,6 @@ export default function JanSeva() {
               />
             ) : (
               <RegisterView
-                activeRole={regRole}
-                setActiveRole={setRegRole}
                 switchTab={switchTab}
                 registerData={registerData}
                 setRegisterData={setRegisterData}
