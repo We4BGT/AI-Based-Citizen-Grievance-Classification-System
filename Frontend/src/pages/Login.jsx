@@ -487,7 +487,8 @@ const RegisterView = ({
    ROOT COMPONENT
 ───────────────────────────────────────── */
 export default function JanSeva() {
-
+  const [complaint, setComplaint] = useState("");
+  const [category, setCategory] = useState("");
   const [activeRole, setActiveRole] = useState("citizen");
 
   const [activeTab, setActiveTab] = useState("signin");
@@ -530,7 +531,11 @@ export default function JanSeva() {
 
     localStorage.setItem("user", JSON.stringify(data.user));
 
-    alert("Login Successful");
+    if (loginData.role === "citizen") {
+      window.location.href = "/citizen";
+    } else {
+     window.location.href = "/admin";
+    }
 
     if (data.user.role === "citizen") {
       window.location.href = "/citizen";
@@ -549,78 +554,145 @@ export default function JanSeva() {
   }
   };
 
-  return (
-    <>
-      {/* Inject scoped CSS */}
-      <style>{STYLES}</style>
+  const classifyComplaint = (text) => {
+  text = text.toLowerCase();
 
-      <div className="janseva-root">
-        {/* Radial gradient background */}
-        <div className="janseva-bg" />
+  if (text.includes("road") || text.includes("bridge")) {
+    return "Infrastructure";
+  }
 
-        {/* Main card */}
-        <div className="janseva-outer-card">
+  if (text.includes("water")) {
+    return "Water Supply";
+  }
 
-          {/* ── Brand header ── */}
-          <div className="janseva-top-header">
-            <div className="janseva-sidebar-icon">
-              <svg width="28" height="28" viewBox="0 0 44 44" fill="none">
-                <rect x="4"  y="27" width="36" height="4" rx="2" fill="white" />
-                <rect x="8"  y="19" width="28" height="4" rx="2" fill="white" />
-                <rect x="13" y="11" width="18" height="4" rx="2" fill="white" />
-                <rect x="2"  y="33" width="40" height="4" rx="2" fill="white" />
-                <rect x="6"  y="37" width="32" height="3" rx="1.5" fill="rgba(255,255,255,0.5)" />
-              </svg>
-            </div>
-            <div className="janseva-brand-text">
-              <div className="janseva-sidebar-name">JanSeva AI</div>
-              <div className="janseva-sidebar-sub">
-                AI-Powered Citizen Grievance · MP Government
-              </div>
-            </div>
-          </div>
+  if (text.includes("electricity")) {
+    return "Electricity";
+  }
 
-          {/* ── Content ── */}
-          <div className="janseva-content">
+  return "General";
+};
+return (
+    <div
+      style={{
+        padding: "30px",
+        color: "white",
+        minHeight: "100vh",
+        background: "#0f172a",
+      }}
+    >
+      <h1>Citizen Dashboard</h1>
 
-            {/* Tab bar */}
-            <div className="janseva-tabs">
-              <button
-                className={`janseva-tab${activeTab === "signin" ? " active" : ""}`}
-                onClick={() => switchTab("signin")}
-              >
-                Sign In
-              </button>
-              <button
-                className={`janseva-tab${activeTab === "register" ? " active" : ""}`}
-                onClick={() => switchTab("register")}
-              >
-                Register
-              </button>
-            </div>
+      <textarea
+        value={complaint}
+        onChange={(e) => setComplaint(e.target.value)}
+        placeholder="Enter your complaint..."
+        style={{
+          width: "100%",
+          height: "150px",
+          padding: "15px",
+          marginTop: "20px",
+          borderRadius: "10px",
+        }}
+      />
 
-            {/* Conditional view */}
-            {activeTab === "signin" ? (
-              <SignInView
-                activeRole={activeRole}
-                setActiveRole={setActiveRole}
-                switchTab={switchTab}
-                loginData={loginData}
-                setLoginData={setLoginData}
-                handleLogin={handleLogin}
-              />
-            ) : (
-              <RegisterView
-                switchTab={switchTab}
-                registerData={registerData}
-                setRegisterData={setRegisterData}
-                handleRegister={handleRegister}
-              />
-            )}
+      <button
+        onClick={() => {
+          const result = classifyComplaint(complaint);
+          setCategory(result);
+        }}
+        style={{
+          marginTop: "20px",
+          padding: "12px 25px",
+          border: "none",
+          borderRadius: "10px",
+          background: "#06b6d4",
+          color: "white",
+          fontWeight: "bold",
+        }}
+      >
+        Analyze Complaint
+      </button>
 
-          </div>
-        </div>
-      </div>
-    </>
+      {category && (
+        <h2 style={{ marginTop: "20px" }}>
+          AI Category: {category}
+        </h2>
+      )}
+    </div>
   );
 }
+return (
+      <>
+         {/* Inject scoped CSS */}
+          <style>{STYLES}</style>
+  
+           <div className="janseva-root">
+           {/* Radial gradient background */}
+           <div className="janseva-bg" />
+  
+           {/* Main card */}
+           <div className="janseva-outer-card">
+  
+           {/* ── Brand header ── */}
+           <div className="janseva-top-header">
+             <div className="janseva-sidebar-icon">
+               <svg width="28" height="28" viewBox="0 0 44 44" fill="none">
+                 <rect x="4"  y="27" width="36" height="4" rx="2" fill="white" />
+                   <rect x="8"  y="19" width="28" height="4" rx="2" fill="white" />
+                     <rect x="13" y="11" width="18" height="4" rx="2" fill="white" />
+                   <rect x="2"  y="33" width="40" height="4" rx="2" fill="white" />
+                 <rect x="6"  y="37" width="32" height="3" rx="1.5" fill="rgba(255,255,255,0.5)" />
+               </svg>
+                </div>
+               <div className="janseva-brand-text">
+                 <div className="janseva-sidebar-name">JanSeva AI</div>
+               <div className="janseva-sidebar-sub">
+                  AI-Powered Citizen Grievance · MP Government
+                </div>
+             </div>
+           </div>
+ 
+           {/* ── Content ── */}
+            <div className="janseva-content">
+ 
+             {/* Tab bar */}
+             <div className="janseva-tabs">
+               <button
+                 className={`janseva-tab${activeTab === "signin" ? " active" : ""}`}
+                 onClick={() => switchTab("signin")}
+                 >
+                 Sign In
+               </button>
+               <button
+                  className={`janseva-tab${activeTab === "register" ? " active" : ""}`}
+                 onClick={() => switchTab("register")}
+               >
+                 Register
+               </button>
+             </div>
+ 
+             {/* Conditional view */}
+             {activeTab === "signin" ? (
+               <SignInView
+                 activeRole={activeRole}
+                 setActiveRole={setActiveRole}
+                 switchTab={switchTab}
+                 loginData={loginData}
+                 setLoginData={setLoginData}
+                 handleLogin={handleLogin}
+               />
+               ) : (
+               <RegisterView
+                 switchTab={switchTab}
+                 registerData={registerData}
+                 setRegisterData={setRegisterData}
+                 handleRegister={handleRegister}
+               />
+             )}
+ 
+           </div>
+         </div>
+       </div>
+     </>
+   );
+
